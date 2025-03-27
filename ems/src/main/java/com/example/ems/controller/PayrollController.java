@@ -24,4 +24,9 @@ public class PayrollController {
     public ResponseEntity<List<Payroll>> getPayrollsByEmployee(@PathVariable Long employeeId) {
         return new ResponseEntity<>(payrollService.getPayrollsByEmployee(employeeId), HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<List<Payroll>> getAllPayrolls() {
+        return new ResponseEntity<>(payrollService.getAllPayrolls(), HttpStatus.OK);
+    }
 }

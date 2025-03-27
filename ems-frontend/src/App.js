@@ -1,29 +1,47 @@
-import React, { useState } from "react";
-import EmployeeList from "./components/EmployeeList";
-import EmployeeForm from "./components/EmployeeForm";
+// src/App.js
+import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import Sidebar from './components/Sidebar';
+import EmployeeList from './components/EmployeeList';
+import PayrollList from './components/PayrollList';
+import AttendanceList from './components/AttendanceList';
+import OverallCharts from './components/OverallCharts';
 
-function App() {
-  const [employeeToEdit, setEmployeeToEdit] = useState(null);
-  const [refresh, setRefresh] = useState(false);
+const App = () => {
+  const [selectedSection, setSelectedSection] = useState('employees');
 
-  const handleEdit = (employee) => {
-    setEmployeeToEdit(employee);
-  };
-
-  const handleSave = () => {
-    setEmployeeToEdit(null); // Clear edit mode
-    setRefresh(!refresh); // Trigger list refresh
+  const renderSection = () => {
+    switch (selectedSection) {
+      case 'employees':
+        return <EmployeeList />;
+      case 'payroll':
+        return <PayrollList />;
+      case 'attendance':
+        return <AttendanceList />;
+      case 'charts':
+        return <OverallCharts />;
+      default:
+        return <EmployeeList />;
+    }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        Employee Management System
-      </h1>
-      <EmployeeForm employeeToEdit={employeeToEdit} onSave={handleSave} />
-      <EmployeeList onEdit={handleEdit} key={refresh} />
+    <div className="flex">
+      <Sidebar setSelectedSection={setSelectedSection} />
+      <AnimatePresence mode="wait">
+        <motion.div
+          className="flex-1 p-4"
+          key={selectedSection}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          {renderSection()}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
-}
+};
 
 export default App;
