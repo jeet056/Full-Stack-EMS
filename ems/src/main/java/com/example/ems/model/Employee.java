@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -24,4 +25,10 @@ public class Employee {
     @Email(message = "Email must be valid")
     @NotBlank(message = "Email is required")
     private String email;
+
+    @NotBlank(message = "Password required")
+    @Size(min = 8, message = "Must be 8 characters long")
+    private String password;
+
+    private String role;
 }
