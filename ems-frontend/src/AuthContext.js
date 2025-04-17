@@ -1,39 +1,48 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUser({ id: decoded.sub, role: decoded.role });
-      } catch (error) {
-        console.error('Invalid token', error);
-        setToken(null);
-        setUser(null);
-        localStorage.removeItem('token');
-      }
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/user', { withCredentials: true });
+      const userData = response.data;
+      setUser({
+        email: userData.attributes.email,
+        role: userData.authorities[0].authority.replace('ROLE_', '')
+      });
+    } catch (error) {
+      console.error('Failed to fetch user', error);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
     }
-  }, [token]);
-
-  const login = (newToken) => {
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setUser(null);
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const login = async () => {
+    // OAuth2 login is handled by redirect; this can be used for post-login refresh
+    await fetchUser();
+  };
+
+  const logout = async () => {
+    try {
+      await axios.post('http://localhost:8080/logout', {}, { withCredentials: true });
+      setUser(null);
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
