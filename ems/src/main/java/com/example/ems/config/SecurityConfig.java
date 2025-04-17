@@ -1,55 +1,45 @@
 package com.example.ems.config;
 
-import com.example.ems.JWT.JwtFilter;
-import com.example.ems.service.EmpDetailService;
+import com.example.ems.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import java.util.Arrays;
 
 @Configuration
 public class SecurityConfig {
 
-    private final EmpDetailService employeeDetailsService;
-    private final JwtFilter jwtFilter;
+    private final UserService oauth2UserService;
 
-    public SecurityConfig(EmpDetailService employeeDetailsService, JwtFilter jwtFilter) {
-        this.employeeDetailsService = employeeDetailsService;
-        this.jwtFilter = jwtFilter;
+    public SecurityConfig(UserService oauth2UserService) {
+        this.oauth2UserService = oauth2UserService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
+            .cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                config.setAllowCredentials(true);
+                return config;
+            }))
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService))
+                .loginPage("/login")
+            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/login", "/api/auth/register").permitAll() // Public endpoints
-                .requestMatchers("/employees/**").authenticated() // Requires authentication
-                .requestMatchers("/payrolls/**").hasRole("ADMIN") // Requires ADMIN role
-                .requestMatchers("/attendances/**").authenticated() // Requires authentication
-                .anyRequest().authenticated() // All other requests require authentication
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/employees/**").hasRole("ADMIN")
+                .requestMatchers("/payrolls/**", "/attendances/**").hasAnyRole("ADMIN", "USER")
+                .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions for JWT
-            )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
-
+            .logout(logout -> logout
+                .logoutSuccessUrl("/")
+            );
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }
