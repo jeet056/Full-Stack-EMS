@@ -1,0 +1,32 @@
+services:
+  java-ems:
+    build:
+      context: ./ems
+      dockerfile: ../emsDockerfile
+    container_name: java-ems
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8080:8080"  # Spring Boot default port
+    networks:
+      - ems-net
+    # env_file: ./.env  # Uncomment if .env file exists
+
+  js-ems-frontend:
+    build:
+      context: ./ems-frontend
+      dockerfile: ../ems-frontendDockerfile
+    container_name: js-ems-frontend
+    restart: unless-stopped
+    init: true
+    ports:
+      - "3000:3000"  # React app default port
+    networks:
+      - ems-net
+    depends_on:
+      - java-ems
+    # env_file: ./.env  # Uncomment if .env file exists
+
+networks:
+  ems-net:
+    driver: bridge

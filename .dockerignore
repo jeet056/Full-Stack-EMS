@@ -1,0 +1,60 @@
+# Version control
+.git/
+.gitignore
+
+# IDE/editor config
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Java build artifacts
+target/
+*.class
+
+# Node.js dependencies and build artifacts
+node_modules/
+build/
+dist/
+
+# Test and debug artifacts
+debug/
+*.log
+
+# Temporary and cache files
+tmp/
+temp/
+*.tmp
+
+# Environment and secrets
+.env*
+*.env
+*.pem
+*.key
+*.crt
+config.local.*
+*.local.yml
+
+# Documentation
+README*
+*.md
+
+# Docker files
+docker-compose*
+Dockerfile*
+
+# Miscellaneous
+.svn/
+.hg/
+local/
+.local/
+
+# Project-specific exclusions
+# (No exclusions for .mvn, .mvnw, .lock files as per instructions)
+
+# Exclude test sources (Java)
+# (Do not exclude src/test/ as tests may be needed for build context)
+
+# Exclude frontend build output (already covered by build/ above)
+
+# Exclude public/ if not needed in build (not excluded here as may be needed)
