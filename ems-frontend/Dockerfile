@@ -8,7 +8,7 @@ WORKDIR /app
 # Install dependencies (npm ci is deterministic)
 COPY --link package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+    npm install
 
 # Copy the rest of the app
 COPY --link . .
@@ -16,9 +16,6 @@ COPY --link . .
 # Build the React app for production
 RUN --mount=type=cache,target=/root/.npm \
     npm run build
-
-# Remove dev dependencies to reduce image size
-RUN rm -rf node_modules && npm ci --production
 
 # --- Production Stage ---
 FROM node:${NODE_VERSION}-slim AS final
@@ -34,11 +31,11 @@ COPY --from=builder /app/package*.json ./
 
 ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max-old-space-size=4096"
-USER appuser
 
-# Serve the build with a simple static server (serve)
-# Install 'serve' globally for static file serving
+# Install 'serve' globally for static file serving (must be done as root)
 RUN npm install -g serve
+
+USER appuser
 
 EXPOSE 3000
 CMD ["serve", "-s", "build", "-l", "3000"]

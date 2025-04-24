@@ -2,7 +2,7 @@ services:
   java-ems:
     build:
       context: ./ems
-      dockerfile: ../emsDockerfile
+      dockerfile: Dockerfile
     container_name: java-ems
     restart: unless-stopped
     init: true
@@ -15,7 +15,7 @@ services:
   js-ems-frontend:
     build:
       context: ./ems-frontend
-      dockerfile: ../ems-frontendDockerfile
+      dockerfile: Dockerfile
     container_name: js-ems-frontend
     restart: unless-stopped
     init: true
