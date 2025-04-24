@@ -10,7 +10,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/attendances")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000",
+ "https://full-stack-10oihg7sh-debojeet-bose-s-projects.vercel.app"})
 public class AttendanceController {
 
     @Autowired

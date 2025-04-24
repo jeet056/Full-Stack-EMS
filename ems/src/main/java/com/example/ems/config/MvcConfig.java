@@ -12,7 +12,7 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(@SuppressWarnings(value = "null") @NonNull CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("https://full-stack-10oihg7sh-debojeet-bose-s-projects.vercel.app","http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
 }

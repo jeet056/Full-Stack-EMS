@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/user', { withCredentials: true });
+      const response = await axios.get('https://full-stack-ems.onrender.com/user', { withCredentials: true });
       const userData = response.data;
       setUser({
         email: userData.attributes.email,
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:8080/logout', {}, { withCredentials: true });
+      await axios.post('https://full-stack-ems.onrender.com/logout', {}, { withCredentials: true });
       setUser(null);
     } catch (error) {
       console.error('Logout failed', error);

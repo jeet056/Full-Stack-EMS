@@ -10,7 +10,7 @@ const ProtectedRoute = ({ element, requiredRole }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/user', { withCredentials: true });
+        const response = await axios.get('https://full-stack-ems.onrender.com/user', { withCredentials: true });
         const userData = response.data;
         setUser({
           email: userData.attributes.email,

@@ -32,7 +32,7 @@ const Register = () => {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/auth/register', {
+      await axios.post('https://full-stack-ems.onrender.com/api/auth/register', {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,

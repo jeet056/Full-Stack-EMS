@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                config.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://full-stack-10oihg7sh-debojeet-bose-s-projects.vercel.app"));
                 config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                 config.setAllowCredentials(true);
                 return config;

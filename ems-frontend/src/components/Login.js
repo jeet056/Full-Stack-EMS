@@ -15,7 +15,7 @@ const Login = () => {
 
     try {
       // Redirect to backend's OAuth2 login endpoint
-      window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+      window.location.href = 'https://full-stack-ems.onrender.com/oauth2/authorization/google';
     } catch (error) {
       console.error('OAuth2 login failed', error);
       setError('Failed to initiate Google login. Please try again.');
