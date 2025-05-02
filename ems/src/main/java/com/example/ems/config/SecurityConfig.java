@@ -1,10 +1,12 @@
 package com.example.ems.config;
 
 import com.example.ems.service.UserService;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.List;
@@ -15,9 +17,13 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final UserService oauth2UserService;
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
-    public SecurityConfig(UserService oauth2UserService) {
+
+    public SecurityConfig(UserService oauth2UserService,ClientRegistrationRepository clientRegistrationRepository) {
         this.oauth2UserService = oauth2UserService;
+        this.clientRegistrationRepository=clientRegistrationRepository;
     }
 
     @Bean
