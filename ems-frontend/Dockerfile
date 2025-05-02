@@ -31,11 +31,11 @@ COPY --from=builder /app/package*.json ./
 
 ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max-old-space-size=4096"
-
-# Install 'serve' globally for static file serving (must be done as root)
-RUN npm install -g serve
-
 USER appuser
+
+# Serve the build with a simple static server (serve)
+# Install 'serve' globally for static file serving
+RUN npm install -g serve
 
 EXPOSE 3000
 CMD ["serve", "-s", "build", "-l", "3000"]
