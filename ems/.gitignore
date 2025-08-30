@@ -37,4 +37,3 @@ build/
 .env.local
 .env.development
 .env.production
-application.properties
