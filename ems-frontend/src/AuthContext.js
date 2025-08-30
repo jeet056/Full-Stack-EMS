@@ -9,14 +9,26 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get('https://full-stack-ems.onrender.com/user', { withCredentials: true });
+      console.log('Fetching user data...');
+      const response = await axios.get('https://full-stack-ems.onrender.com/user', { 
+        withCredentials: true,
+        timeout: 10000 // 10 second timeout
+      });
+      console.log('User data received:', response.data);
       const userData = response.data;
       setUser({
         email: userData.attributes.email,
         role: userData.authorities[0].authority.replace('ROLE_', '')
       });
     } catch (error) {
-      console.error('Failed to fetch user', error);
+      console.error('Failed to fetch user:', error);
+      if (error.response) {
+        console.error('Error response:', error.response.status, error.response.data);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
       setUser(null);
     } finally {
       setIsLoading(false);
@@ -38,6 +50,8 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     } catch (error) {
       console.error('Logout failed', error);
+      // Even if logout fails, clear the user state
+      setUser(null);
     }
   };
 

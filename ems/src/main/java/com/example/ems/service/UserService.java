@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 public class UserService extends DefaultOAuth2UserService {
 
+    @SuppressWarnings("null")
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
